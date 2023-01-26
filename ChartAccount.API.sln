@@ -1,0 +1,56 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.4.33103.184
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Libraries", "Libraries", "{BD85292B-99F9-4591-8CBF-B5BD33273687}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ChartAccountDomain", "ChartAccount.Domain\ChartAccountDomain.csproj", "{A0F34A0E-4679-4DD0-A3A3-643D0B481751}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ChartAccountBusiness", "ChartAccount.Business\ChartAccountBusiness.csproj", "{AE434A37-C064-48F7-B49E-58C2F6EE7DCC}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ChartAccountAPI", "ChartAccount.API\ChartAccountAPI.csproj", "{5581EAE8-8922-4F09-B25D-85B84C8F64F6}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ChartAccountTest", "ChartAccount.Test\ChartAccountTest.csproj", "{D31DF112-AD07-4076-9645-3B6F9A0E57F7}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ChartAccountRepository", "ChartAccount.Repository\ChartAccountRepository.csproj", "{D58BAD6F-5E0C-40FB-B09E-7266E40FA9DA}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{A0F34A0E-4679-4DD0-A3A3-643D0B481751}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A0F34A0E-4679-4DD0-A3A3-643D0B481751}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A0F34A0E-4679-4DD0-A3A3-643D0B481751}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A0F34A0E-4679-4DD0-A3A3-643D0B481751}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AE434A37-C064-48F7-B49E-58C2F6EE7DCC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AE434A37-C064-48F7-B49E-58C2F6EE7DCC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AE434A37-C064-48F7-B49E-58C2F6EE7DCC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AE434A37-C064-48F7-B49E-58C2F6EE7DCC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5581EAE8-8922-4F09-B25D-85B84C8F64F6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5581EAE8-8922-4F09-B25D-85B84C8F64F6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5581EAE8-8922-4F09-B25D-85B84C8F64F6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5581EAE8-8922-4F09-B25D-85B84C8F64F6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D31DF112-AD07-4076-9645-3B6F9A0E57F7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D31DF112-AD07-4076-9645-3B6F9A0E57F7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D31DF112-AD07-4076-9645-3B6F9A0E57F7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D31DF112-AD07-4076-9645-3B6F9A0E57F7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D58BAD6F-5E0C-40FB-B09E-7266E40FA9DA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D58BAD6F-5E0C-40FB-B09E-7266E40FA9DA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D58BAD6F-5E0C-40FB-B09E-7266E40FA9DA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D58BAD6F-5E0C-40FB-B09E-7266E40FA9DA}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{A0F34A0E-4679-4DD0-A3A3-643D0B481751} = {BD85292B-99F9-4591-8CBF-B5BD33273687}
+		{AE434A37-C064-48F7-B49E-58C2F6EE7DCC} = {BD85292B-99F9-4591-8CBF-B5BD33273687}
+		{D58BAD6F-5E0C-40FB-B09E-7266E40FA9DA} = {BD85292B-99F9-4591-8CBF-B5BD33273687}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {DD95FF06-D970-4DF5-BE5D-47707691C5B2}
+	EndGlobalSection
+EndGlobal
