@@ -15,6 +15,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ChartAccountTest", "ChartAc
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ChartAccountRepository", "ChartAccount.Repository\ChartAccountRepository.csproj", "{D58BAD6F-5E0C-40FB-B09E-7266E40FA9DA}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SqlScripts", "SqlScripts", "{30B3F993-C128-4AD5-A9D0-1EFEF019E3FD}"
+	ProjectSection(SolutionItems) = preProject
+		SqlScripts\01_CREATEDATABASE.sql = SqlScripts\01_CREATEDATABASE.sql
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

@@ -12,6 +12,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\ChartAccount.Domain\ChartAccountDomain.csproj" />
+    <ProjectReference Include="..\ChartAccount.Repository\ChartAccountRepository.csproj" />
   </ItemGroup>
 
 </Project>

@@ -11,7 +11,10 @@ namespace ChartAccountBusiness.Interfaces
 {
     public interface IChartAccountBusiness
     {
-        Task<ChartAccountDomain.ChartAccount> x();
-        //Task<ChartAccount.Domain.> Test(int temperature);
+        OperationResult Insert(ChartAccount entity, bool autoSave = true);
+        OperationResult Update(ChartAccount entity, bool autoSave = true);
+        OperationResult Delete(int id, bool autoSave = true);
+        ChartAccount GetById(int id);
+        string GetNextCode(string parentCode);
     }
 }
