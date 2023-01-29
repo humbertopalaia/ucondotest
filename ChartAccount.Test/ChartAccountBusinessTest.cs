@@ -3,6 +3,7 @@
 //using Duffnization.Spotify;
 //using Duffnization.Spotify.Domains;
 
+using Castle.Core.Internal;
 using ChartAccountBusiness.Interfaces;
 using ChartAccountRepository;
 using ChartAccountTest;
@@ -43,7 +44,7 @@ namespace ChartAccount.Test
         }
 
         [Test]
-        [TestCase("1.998.999.999")]
+        [TestCase("1")]
         public async Task GetNextCode(string parent)
         {
             var newCode = _chartAccountBusiness.GetNextCode(parent);
@@ -57,6 +58,31 @@ namespace ChartAccount.Test
             var response = _chartAccountBusiness.GetById(1);
 
             Assert.IsNotNull(response);
+        }
+
+
+        [Test]   
+        [TestCase("1.0", "1")]
+        [TestCase("1.1", "1")]
+        [TestCase("2.1", "2")]
+        [TestCase("2.1.5", "2")]
+        [TestCase("2.1.5", "2.1")]
+        [TestCase("3.0.1", "3.0")]
+
+        public async Task GetParentCodeHasParentTest(string code, string expected)
+        {
+            var response = _chartAccountBusiness.GetParentCode(code);
+
+            Assert.IsTrue(response == expected);
+        }
+
+
+        [Test]
+        public async Task GetParentCodeNoParentTest()
+        {
+            var response = _chartAccountBusiness.GetParentCode("1");
+
+            Assert.IsTrue(response.IsNullOrEmpty());
         }
     }
 }

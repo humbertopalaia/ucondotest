@@ -1,9 +1,11 @@
 ﻿using AutoMapper;
+using Castle.Core.Internal;
 using ChartAccountBusiness.Interfaces;
 using ChartAccountDomain;
 using ChartAccountRepository;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
+using System.Security.Principal;
 
 namespace ChartAccountBusiness
 {
@@ -16,26 +18,174 @@ namespace ChartAccountBusiness
         {
 
         }
-        public ChartAccountBusiness(IGenericRepository<ChartAccount> repository) {
+        public ChartAccountBusiness(IGenericRepository<ChartAccount> repository)
+        {
             _repository = repository;
         }
 
-        private List<string> ValidateInsert(ChartAccount account)
+        private List<string> ValidateInsert(ChartAccount account, bool firstLevel = true)
         {
-            var errors= new List<string>();
+            var errors = new List<string>();
 
-            if (!account.AcceptEntry && account.Children.Count() > 0)
-                errors.Add("Chart of accounts that not accept entry can't have children entries");
+            try
+            {
+                errors.AddRange(ValidateInsertBasicInfo(account));
+                errors.AddRange(ValidateAccountTypes(account));          
+
+                if (firstLevel)
+                    errors.AddRange(ValidateFirstLevelParent(account));
+
+                errors.AddRange(ValidateChildren(account));
+            }
+            catch (Exception ex)
+            {
+                errors.Add(ex.Message);
+            }
 
             return errors;
+        }
+
+        private List<string> ValidateInsertBasicInfo(ChartAccount account)
+        {
+            var errors = new List<string>();
+
+
+            var codeNumber = account.Code.Replace(".", "");
+
+            if (!long.TryParse(codeNumber, out var code))
+                errors.Add("The code has an invalid format");
+
+
+            if (account.AcceptEntry && account.Children.Count() > 0)
+                errors.Add("Chart of accounts that has accept entry can't have children entries");
+
+
+            var invalidsType = account.Type != "R" && account.Type != "D";
+            if (invalidsType)
+                errors.Add($"Type of account {account.Name}, must be R or D");
+
+            var codes = account.Code.Split(".");
+
+            foreach (var currentCode in codes)
+            {
+                if (Convert.ToInt32(currentCode) > 999)
+                    errors.Add("The code part can't be more then 999");
+            }
+
+
+            var existCode = _repository.Get(x => x.Code == account.Code).Any();
+            if (existCode)
+                errors.Add($"The code {account.Code} already exists");
+
+            return errors;
+
+        }
+
+        private List<string> ValidateAccountTypes(ChartAccount account)
+        {
+            List<string> errors = new List<string>();
+
+            var accountsDiferentType = account.Children.Where(x => x.Type != account.Type).ToList();
+
+            if (accountsDiferentType.Count > 0)
+            {
+                foreach (var childAccount in accountsDiferentType)
+                {
+                    errors.Add($"Child account {childAccount.Name} must have been same type of parent account");
+                }
+            }
+
+            return errors;
+        }
+        private List<string> ValidateFirstLevelParent(ChartAccount account)
+        {
+
+            List<string> errors = new List<string>();
+
+
+            var parentCode = GetParentCode(account.Code);
+
+            if (!string.IsNullOrEmpty(parentCode))
+            {
+                var parent = _repository.Get(x => x.Code == parentCode).FirstOrDefault();
+
+                if (parent == null)
+                {
+                    errors.Add($"Parent from entry {account.Code} does not exists");
+                }
+                else
+                {
+                    if (parent.AcceptEntry)
+                        errors.Add($"Parent {parentCode} can't have children because him accept entries");
+                }
+            }
+
+            return errors;
+        }
+        private List<string> ValidateChildren(ChartAccount entity)
+        {
+            List<string> errors = new List<string>();
+
+            foreach (var child in entity.Children)
+            {
+                var parentCode = GetParentCode(child.Code);
+
+                if (parentCode != entity.Code)
+                {
+                    errors.Add($"The code pattern of child ({child.Code}) isn't the same of parent ({entity.Code})");
+                }
+
+
+                var childErrors = ValidateInsert(child, false);
+                errors.AddRange(childErrors);
+            }
+
+            return errors;
+        }
+
+
+        public int? GetParentId(string childCode)
+        {
+            var parentCode = GetParentCode(childCode);
+
+            if (!parentCode.IsNullOrEmpty())
+            {
+                var parent = _repository.Get(x => x.Code == parentCode).FirstOrDefault();
+                return parent.Id;
+            }
+            else
+                return null;
+        }
+
+        public string GetParentCode(string code)
+        {
+            var codes = code.Split('.');
+            var parentCode = string.Empty;
+
+            if (codes != null && codes.Length > 1)
+            {
+                for (int i = 0; i < codes.Length - 1; i++)
+                {
+                    parentCode += codes[i] + ".";
+                }
+
+                parentCode = parentCode.Substring(0, parentCode.Length - 1);
+            }
+
+            return parentCode;
         }
 
         public string GetNextCode(string parentCode)
         {
             string newCode = string.Empty;
+
+
+            if (parentCode.Length == 1)
+                parentCode += ".0";
+
             var codeParts = parentCode.Split(".");
             var level = codeParts.Length - 1;
-            var newSingleCode =  GetNewSingleCode(parentCode, level);
+            var newSingleCode = GetNewSingleCode(parentCode, level);
 
             var changedLevel = newSingleCode.Item1;
             var newCodeValue = newSingleCode.Item2;
@@ -45,22 +195,25 @@ namespace ChartAccountBusiness
                 if (i == changedLevel)
                     newCode += newCodeValue.ToString();
                 else
-                    newCode += codeParts[i] + ".";                
+                    newCode += codeParts[i] + ".";
             }
 
             var chartAccount = _repository.Get(x => x.Code == newCode);
-            
-            if(chartAccount.Count() > 0) 
+
+            if (chartAccount.Count() > 0)
                 newCode = GetNextCode(newCode);
 
             return newCode;
         }
 
 
-        private Tuple<int,int> GetNewSingleCode(string parentCode, int level)
+        private Tuple<int, int> GetNewSingleCode(string parentCode, int level)
         {
-            var newCodeToReturn = new Tuple<int, int>(0,0);
+            var newCodeToReturn = new Tuple<int, int>(0, 0);
+
+
             var codeParts = parentCode.Split('.');
+
 
             var currentCode = Convert.ToInt32(codeParts[level]);
 
@@ -86,19 +239,23 @@ namespace ChartAccountBusiness
 
         public ChartAccount GetById(int id)
         {
-           return _repository.GetById(id);
+            return _repository.GetById(id);
         }
 
         public OperationResult Insert(ChartAccount entity, bool autoSave = true)
         {
-            var result = new OperationResult();
+                var result = new OperationResult();
 
             var validations = ValidateInsert(entity);
+
 
             if (validations.Count > 0)
                 result = new OperationResult { Success = false, Errors = validations };
             else
             {
+                var parentId = GetParentId(entity.Code);
+                entity.ParentAccountId = parentId;
+
                 _repository.Insert(entity);
                 result.Success = true;
             }
@@ -112,15 +269,31 @@ namespace ChartAccountBusiness
             return new OperationResult { Success = true };
         }
 
-        public OperationResult Delete(int id, bool autoSave = true)
+        public OperationResult Delete(string code, bool autoSave = true)
         {
-            _repository.Delete(id);
+            var entity = _repository.Get(x => x.Code == code, null, "Children").FirstOrDefault();
+
+            foreach (var child in entity.Children)
+            {
+                Delete(child.Code);
+            }
+
+
+            entity = _repository.Get(x => x.Code == code).FirstOrDefault();
+
+            if (entity != null)
+                _repository.Delete(entity.Id);
+
             return new OperationResult { Success = true };
         }
 
         public List<ChartAccount> GetAll()
         {
-            return _repository.Get(x => x.ParentAccountId == null, null, "Children").ToList();
+            var all = _repository.GetAll();
+
+            var filtered = all.Where(x => x.ParentAccountId == null).ToList();
+
+            return filtered;
         }
     }
 }

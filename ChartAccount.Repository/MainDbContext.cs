@@ -33,7 +33,6 @@ namespace ChartAccountRepository
         {
             if (!string.IsNullOrEmpty(_connectionString))
                 optionsBuilder
-                    .UseLazyLoadingProxies()
                     .UseSqlServer(_connectionString);
 
 

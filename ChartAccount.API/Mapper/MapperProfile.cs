@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using ChartAccountAPI.Models;
 using ChartAccountAPI.Models.ChartAccount;
 
 namespace ChartAccount.API.Mapper
@@ -7,8 +8,11 @@ namespace ChartAccount.API.Mapper
     {
         public MapperProfile()
         {
-            CreateMap<ChartAccountDomain.ChartAccount, ChartAccountModel>();
-            CreateMap<ChartAccountModel,ChartAccountDomain.ChartAccount >();
+            CreateMap<ChartAccountDomain.ChartAccount, ChartAccountListModel>();
+            CreateMap<ChartAccountInsertModel, ChartAccountDomain.ChartAccount>()
+                .ForMember(dest => dest.CreateDate, opt => opt.MapFrom(src => DateTime.Now));
+
+            CreateMap<ChartAccountBusiness.OperationResult, OperationResultModel>();
 
             //    .ForMember(dest => dest.BearStyle, opt => opt.MapFrom(src => src.Name));
 

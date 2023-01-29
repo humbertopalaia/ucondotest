@@ -19,6 +19,6 @@ namespace ChartAccountRepository
         void Update(T entity, bool autoSave = true);
         void Delete(object id, bool autoSave = true);
         void SaveChanges();
-        List<T> GetAll();
+        IQueryable<T> GetAll();
     }
 }

@@ -90,9 +90,9 @@ namespace ChartAccountRepository
             if (autoSave) SaveChanges();
         }
 
-        public List<T> GetAll()
+        public IQueryable<T> GetAll()
         {
-            return _dbSet.ToList();
+            return _dbSet.AsQueryable();
         }
     }
 }
