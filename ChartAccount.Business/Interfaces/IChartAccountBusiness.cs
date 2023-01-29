@@ -19,6 +19,8 @@ namespace ChartAccountBusiness.Interfaces
 
         List<ChartAccount> GetAll();
 
+        List<ChartAccount> Filter(string filter);
+
         string GetParentCode(string code);
 
         int? GetParentId(string childCode);

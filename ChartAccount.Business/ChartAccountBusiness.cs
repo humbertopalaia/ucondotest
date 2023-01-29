@@ -289,10 +289,36 @@ namespace ChartAccountBusiness
 
         public List<ChartAccount> GetAll()
         {
-            var all = _repository.GetAll();
+            var all = _repository.GetAll().ToList();
 
-            var filtered = all.Where(x => x.ParentAccountId == null).ToList();
 
+            return all;
+        }
+
+        public List<ChartAccount> Filter(string filter)
+        {
+            var all = GetAll();
+
+            if (!filter.IsNullOrEmpty())
+                all = ApplyFilter(all, filter);
+            
+            return all.Where(x => x.ParentAccountId == null).ToList();
+        }
+
+        private List<ChartAccount> ApplyFilter(List<ChartAccount> entities, string filter)
+        {
+            List<ChartAccount> filtered = new List<ChartAccount>();
+
+
+            foreach (var entity in entities)
+            {                
+                if(entity.Children != null)
+                    entity.Children = ApplyFilter(entity.Children.ToList(), filter);
+            }
+
+            filtered = entities.Where(x.Name.Contains(filter)).ToList();
+
+              
             return filtered;
         }
     }
