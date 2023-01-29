@@ -1,12 +1,15 @@
 ﻿using AutoMapper;
-    
+using ChartAccountAPI.Models.ChartAccount;
+
 namespace ChartAccount.API.Mapper
 {
     public class MapperProfile : Profile
     {
         public MapperProfile()
         {
-            //CreateMap<Duffnization.CRUD.Domains.Search.BeerStyle, BeerStyle>()
+            CreateMap<ChartAccountDomain.ChartAccount, ChartAccountModel>();
+            CreateMap<ChartAccountModel,ChartAccountDomain.ChartAccount >();
+
             //    .ForMember(dest => dest.BearStyle, opt => opt.MapFrom(src => src.Name));
 
 
@@ -18,7 +21,7 @@ namespace ChartAccount.API.Mapper
             //    .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Track.Name))
             //    .ForMember(dest => dest.Artist, opt => opt.MapFrom(src => GetArtists(src.Track.Artists)))
             //    .ForMember(dest => dest.Link, opt => opt.MapFrom(src => src.Track.ExternalUrls.Spotify));
-                
+
         }
 
         //private string GetArtists(List<Artist> artistsList)

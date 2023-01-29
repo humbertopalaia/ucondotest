@@ -1,17 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace ChartAccountDomain
+namespace ChartAccountAPI.Models.ChartAccount
 {
-    public class ChartAccount
+    public class ChartAccountModel
     {
-
-        [Key]
         public int Id { get; set; }
         public int? ParentAccountId { get; set; }
         public string Code { get; set; }
@@ -21,8 +14,6 @@ namespace ChartAccountDomain
         public DateTime CreateDate { get; set; }
         public DateTime? UpdateDate { get; set; }
 
-        [ForeignKey("ParentAccountId")]
-        public virtual IEnumerable<ChartAccount> Children { get; set; }
-
+        public virtual IEnumerable<ChartAccountModel> Children { get; set; }
     }
 }

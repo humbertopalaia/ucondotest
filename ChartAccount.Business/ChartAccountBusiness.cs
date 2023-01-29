@@ -2,6 +2,7 @@
 using ChartAccountBusiness.Interfaces;
 using ChartAccountDomain;
 using ChartAccountRepository;
+using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 
 namespace ChartAccountBusiness
@@ -10,13 +11,23 @@ namespace ChartAccountBusiness
     {
 
         private readonly IGenericRepository<ChartAccount> _repository;
+
+        public ChartAccountBusiness()
+        {
+
+        }
         public ChartAccountBusiness(IGenericRepository<ChartAccount> repository) {
             _repository = repository;
         }
 
         private List<string> ValidateInsert(ChartAccount account)
         {
-            return new List<string>();
+            var errors= new List<string>();
+
+            if (!account.AcceptEntry && account.Children.Count() > 0)
+                errors.Add("Chart of accounts that not accept entry can't have children entries");
+
+            return errors;
         }
 
         public string GetNextCode(string parentCode)
@@ -107,6 +118,9 @@ namespace ChartAccountBusiness
             return new OperationResult { Success = true };
         }
 
-
+        public List<ChartAccount> GetAll()
+        {
+            return _repository.Get(x => x.ParentAccountId == null, null, "Children").ToList();
+        }
     }
 }

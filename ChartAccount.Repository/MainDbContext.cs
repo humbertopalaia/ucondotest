@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Proxies;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,6 +22,7 @@ namespace ChartAccountRepository
         public MainDbContext(DbContextOptions<MainDbContext> options)
             : base(options)
         {
+            this.ChangeTracker.LazyLoadingEnabled= false;
         }
 
         public DbSet<ChartAccountDomain.ChartAccount> ChartAccount { get; set; }
@@ -30,7 +32,12 @@ namespace ChartAccountRepository
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (!string.IsNullOrEmpty(_connectionString))
-                optionsBuilder.UseSqlServer(_connectionString);
+                optionsBuilder
+                    .UseLazyLoadingProxies()
+                    .UseSqlServer(_connectionString);
+
+
+
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

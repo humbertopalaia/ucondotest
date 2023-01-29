@@ -21,7 +21,7 @@ namespace ChartAccount.Test
         public ChartAccountBusinessTest() : base()
         {
             _dbContext = new MainDbContext(_configuration.GetConnectionString("Default"));
-            
+
             _repository = new GenericRepository<ChartAccountDomain.ChartAccount>(_dbContext);
             _chartAccountBusiness = new ChartAccountBusiness.ChartAccountBusiness(_repository);
         }
@@ -51,13 +51,12 @@ namespace ChartAccount.Test
             Assert.IsNotNull(newCode);
         }
 
-        //        [Test]
-        //        public async Task ListAll()
-        //        {
-        //            var response = await _duffnizationCRUDService.ListAll();
+        [Test]
+        public async Task GetById()
+        {
+            var response = _chartAccountBusiness.GetById(1);
 
-        //            Assert.IsNotNull(response);
-        //            Assert.IsTrue(response.Count > 0);
-        //        }
+            Assert.IsNotNull(response);
+        }
     }
 }

@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using ChartAccountDomain;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -87,6 +88,11 @@ namespace ChartAccountRepository
             _context.Entry(entity).State = EntityState.Modified;
             
             if (autoSave) SaveChanges();
+        }
+
+        public List<T> GetAll()
+        {
+            return _dbSet.ToList();
         }
     }
 }

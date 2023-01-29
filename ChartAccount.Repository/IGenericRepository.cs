@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ChartAccountDomain;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
@@ -18,5 +19,6 @@ namespace ChartAccountRepository
         void Update(T entity, bool autoSave = true);
         void Delete(object id, bool autoSave = true);
         void SaveChanges();
+        List<T> GetAll();
     }
 }

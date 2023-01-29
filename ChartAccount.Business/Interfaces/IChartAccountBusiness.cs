@@ -16,5 +16,7 @@ namespace ChartAccountBusiness.Interfaces
         OperationResult Delete(int id, bool autoSave = true);
         ChartAccount GetById(int id);
         string GetNextCode(string parentCode);
+
+        List<ChartAccount> GetAll();
     }
 }

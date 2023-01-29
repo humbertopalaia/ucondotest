@@ -1,5 +1,8 @@
-﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+﻿using ChartAccountBusiness.Interfaces;
+using ChartAccountRepository;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http.Json;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
@@ -8,8 +11,7 @@ using Serilog.Events;
 using Serilog.Sinks.MSSqlServer;
 using System.Collections.ObjectModel;
 using System.Text;
-
-
+using System.Text.Json.Serialization;
 
 namespace ChartAccount.API
 {
@@ -25,21 +27,16 @@ namespace ChartAccount.API
         {
             services.AddControllers();
 
+            services.AddDbContext<MainDbContext>(options => options.UseSqlServer(_configuration.GetConnectionString("Default") ?? throw new InvalidOperationException("Connection string not found.")));
+
             services.AddEndpointsApiExplorer();
             services.AddSwaggerGen();
 
-            services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
-
-            //services.AddScoped<DuffnizationCRUDConfig, DuffnizationCRUDConfig>(x => new DuffnizationCRUDConfig
-            //{
-            //    BaseApiUrl = _configuration["CRUD:BaseURL"],
-            //    Username = _configuration["CRUD:Username"],
-            //    Password = _configuration["CRUD:Password"],
-            //});
-
-            //services.AddScoped<IBearStyleBusiness, BearStyleBusiness>();
+            services.AddAutoMapper(typeof(Startup));
 
 
+            services.AddTransient<IGenericRepository<ChartAccountDomain.ChartAccount>, GenericRepository<ChartAccountDomain.ChartAccount>>();
+            services.AddTransient<IChartAccountBusiness, ChartAccountBusiness.ChartAccountBusiness>();
 
 
             services.AddAuthentication(options =>
@@ -65,6 +62,10 @@ namespace ChartAccount.API
 
             services.AddAuthorization();
 
+            services.Configure<JsonOptions>(options =>
+            {
+                options.SerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
+            });
 
             services.AddSwaggerGen(option =>
             {
@@ -111,6 +112,8 @@ namespace ChartAccount.API
                 endpoints.MapControllers();
 
             });
+
+            
     
         }
     }
