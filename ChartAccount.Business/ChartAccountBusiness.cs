@@ -181,11 +181,15 @@ namespace ChartAccountBusiness
             var chartAccount = _repository.Get(x => x.Code == parentCode, null, "Children").FirstOrDefault();
             var lastCode = chartAccount.Children.OrderByDescending(x => x.LevelCode).FirstOrDefault();
 
+            var newLastCode = 0;
 
-            lastCode.LevelCode++;
+            if (lastCode == null)
+                newLastCode = 1;
+            else
+                newLastCode = lastCode.LevelCode+1;
 
 
-            if (lastCode.LevelCode > 999)
+            if (newLastCode > 999)
             {
                 //Como o level atual é 999, sobe um nível para procurar o próximo pai disponível
                 var codeParts = parentCode.Split(".");
@@ -215,7 +219,7 @@ namespace ChartAccountBusiness
             }
             else
             {
-                var numberParentCode = lastCode.LevelCode;
+                var numberParentCode = newLastCode;
 
                 newCode = parentCode + "." + numberParentCode.ToString();
 
