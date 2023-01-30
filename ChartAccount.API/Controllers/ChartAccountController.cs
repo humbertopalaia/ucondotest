@@ -11,7 +11,7 @@ using ChartAccountAPI.Models;
 namespace ChartAccountAPI.Controllers
 {
     [Route("api/[controller]")]
-
+    [Authorize]
     public class ChartAccountController : Controller
     {
         private readonly IChartAccountBusiness _chartAccountBusiness;
@@ -33,7 +33,6 @@ namespace ChartAccountAPI.Controllers
 
 
         [HttpGet("List")]
-        [AllowAnonymous]
         public IActionResult List()
         {
             var entity = _chartAccountBusiness.GetAll();
@@ -44,7 +43,6 @@ namespace ChartAccountAPI.Controllers
         }
 
         [HttpPut("Insert")]
-        [AllowAnonymous]
         public IActionResult Insert([FromBody] ChartAccountInsertModel model)
         {
             var resultModel = new OperationResultModel();
@@ -70,7 +68,7 @@ namespace ChartAccountAPI.Controllers
 
 
         [HttpGet]
-        [AllowAnonymous]
+        [HttpDelete("GetNextCode")]
         public IActionResult GetNextCode(string currentCode)
         {
             return Json(new { NextCode = _chartAccountBusiness.GetNextCode(currentCode) } );
@@ -78,7 +76,6 @@ namespace ChartAccountAPI.Controllers
 
 
         [HttpDelete("Delete")]
-        [AllowAnonymous]
         public IActionResult Delete(string code)
         {
             var resultModel = new OperationResultModel();
