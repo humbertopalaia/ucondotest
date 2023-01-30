@@ -45,12 +45,12 @@ API em .NET 6 (C#) responsável por:
         2.3 Conecte no banco de dados com um usuário master
         2.4 Execute o script 01_CREATEDATABASE.sql localizado na pasta SqlScripts na raiz do diretório clonado
 
- *3. Configurando appsettings da aplicação*
 
-    - Na raiz do projeto ChartAccountAPI, alterar no appsettings a connection string Default de acordo com os dados do seu ambiente local. 
+*3. Configurando appsettings da aplicação*
 
-    - É possível, mas não obrigatório, fazer alteração do usuário e senha para geração de autenticação, por padrão são: admin/admin.
+        - Na raiz do projeto ChartAccountAPI, alterar no appsettings a connection string Default de acordo com os dados do seu ambiente local. 
 
+        - É possível, mas não obrigatório, fazer alteração do usuário e senha para geração de autenticação, por padrão são: admin/admin.
 ## Execução e chamada dos métodos
 
 - Selecione o projeto ChartAccountAPI como projeto de inicialização (Set as Startup Project).
