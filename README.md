@@ -47,7 +47,9 @@ API em .NET 6 (C#) responsável por:
 
  *3. Configurando appsettings da aplicação*
 
-    Na raiz do projeto ChartAccountAPI, alterar no appsettings a connection string Default de acordo com os dados do seu ambiente local. 
+    - Na raiz do projeto ChartAccountAPI, alterar no appsettings a connection string Default de acordo com os dados do seu ambiente local. 
+
+    - É possível, mas não obrigatório, fazer alteração do usuário e senha para geração de autenticação, por padrão são: admin/admin.
 
 ## Execução e chamada dos métodos
 
@@ -55,7 +57,7 @@ API em .NET 6 (C#) responsável por:
 - Clique em Run(dev) na barra de ferramentas do Visual Studio.
 - Um swagger será exibido com os métodos disponíveis.
 
-**Importante: Para realizar a chamada dos métodos, é necessário a geração de Bearer token através do endpoint api/auth/gettoken**
+**Importante: Para realizar a chamada dos métodos, é necessário a geração de Bearer token através do endpoint api/auth/gettoken, o usuário e a senha padrão são admin/admin, mas podem ser alterados no appsettings**
 ## Deploy local
 
     **Ambiente Windows x64**
