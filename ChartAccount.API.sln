@@ -18,6 +18,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SqlScripts", "SqlScripts", 
 		SqlScripts\01_CREATEDATABASE.sql = SqlScripts\01_CREATEDATABASE.sql
 	EndProjectSection
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ChartAccountTest", "ChartAccount.Test\ChartAccountTest.csproj", "{7C9B946A-99F1-49F6-98A9-BFDA040C95A7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -40,6 +42,10 @@ Global
 		{D58BAD6F-5E0C-40FB-B09E-7266E40FA9DA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D58BAD6F-5E0C-40FB-B09E-7266E40FA9DA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D58BAD6F-5E0C-40FB-B09E-7266E40FA9DA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7C9B946A-99F1-49F6-98A9-BFDA040C95A7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7C9B946A-99F1-49F6-98A9-BFDA040C95A7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7C9B946A-99F1-49F6-98A9-BFDA040C95A7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7C9B946A-99F1-49F6-98A9-BFDA040C95A7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

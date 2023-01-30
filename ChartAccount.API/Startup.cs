@@ -69,7 +69,7 @@ namespace ChartAccount.API
 
             services.AddSwaggerGen(option =>
             {
-                option.SwaggerDoc("v1", new OpenApiInfo { Title = "Duffnization.API", Version = "v1" });
+                option.SwaggerDoc("v1", new OpenApiInfo { Title = "ChartAccount.API", Version = "v1" });
                 option.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
                 {
                     In = ParameterLocation.Header,
