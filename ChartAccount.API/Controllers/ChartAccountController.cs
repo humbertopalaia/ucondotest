@@ -67,8 +67,7 @@ namespace ChartAccountAPI.Controllers
 
 
 
-        [HttpGet]
-        [HttpDelete("GetNextCode")]
+        [HttpGet("GetNextCode")]
         public IActionResult GetNextCode(string currentCode)
         {
             return Json(new { NextCode = _chartAccountBusiness.GetNextCode(currentCode) } );

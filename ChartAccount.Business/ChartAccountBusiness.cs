@@ -30,7 +30,7 @@ namespace ChartAccountBusiness
             try
             {
                 errors.AddRange(ValidateInsertBasicInfo(account));
-                errors.AddRange(ValidateAccountTypes(account));          
+                errors.AddRange(ValidateAccountTypes(account));
 
                 if (firstLevel)
                     errors.AddRange(ValidateFirstLevelParent(account));
@@ -179,31 +179,66 @@ namespace ChartAccountBusiness
         {
             string newCode = string.Empty;
 
+            var chartAccount = _repository.Get(x => x.Code == parentCode, null, "Children").FirstOrDefault();
 
-            if (parentCode.Length == 1)
-                parentCode += ".0";
-
-            var codeParts = parentCode.Split(".");
-            var level = codeParts.Length - 1;
-            var newSingleCode = GetNewSingleCode(parentCode, level);
-
-            var changedLevel = newSingleCode.Item1;
-            var newCodeValue = newSingleCode.Item2;
-
-            for (int i = 0; i <= changedLevel; i++)
+            if (chartAccount != null && chartAccount.Children.Count() > 0)
             {
-                if (i == changedLevel)
-                    newCode += newCodeValue.ToString();
-                else
-                    newCode += codeParts[i] + ".";
+                var lastCode = chartAccount.Children.OrderByDescending(x => x.LevelCode).FirstOrDefault();
+
+                var currentCode = parentCode + "." + (lastCode.LevelCode);
+                var codeParts = currentCode.Split(".");
+                var level = codeParts.Length-1;
+                var newSingleCode = GetNewSingleCode(currentCode, level);
+
+
+                var changedLevel = newSingleCode.Item1;
+                var newCodeValue = newSingleCode.Item2;
+
+                for (int i = 0; i <= changedLevel; i++)
+                {
+                    if (i == changedLevel)
+                        newCode += newCodeValue.ToString();
+                    else
+                        newCode += codeParts[i] + ".";
+                }
+                
+               var chartAccounts = _repository.Get(x => x.Code == newCode);
+
+                if (chartAccounts.Count() > 0)
+                    newCode = GetNextCode(newCode);
+
+                return newCode;
             }
+            else
+                return parentCode + ".1";
 
-            var chartAccount = _repository.Get(x => x.Code == newCode);
 
-            if (chartAccount.Count() > 0)
-                newCode = GetNextCode(newCode);
 
-            return newCode;
+
+            //if (parentCode.Length == 1)
+            //    parentCode += ".0";
+
+            //var codeParts = parentCode.Split(".");
+            //var level = codeParts.Length - 1;
+            //var newSingleCode = GetNewSingleCode(parentCode, level);
+
+            //var changedLevel = newSingleCode.Item1;
+            //var newCodeValue = newSingleCode.Item2;
+
+            //for (int i = 0; i <= changedLevel; i++)
+            //{
+            //    if (i == changedLevel)
+            //        newCode += newCodeValue.ToString();
+            //    else
+            //        newCode += codeParts[i] + ".";
+            //}
+
+            //var chartAccount = _repository.Get(x => x.Code == newCode);
+
+            //if (chartAccount.Count() > 0)
+            //    newCode = GetNextCode(newCode);
+
+            //return newCode;
         }
 
 
@@ -233,7 +268,7 @@ namespace ChartAccountBusiness
         }
 
 
-
+            
 
 
         public ChartAccount GetById(int id)
@@ -243,7 +278,7 @@ namespace ChartAccountBusiness
 
         public OperationResult Insert(ChartAccount entity, bool autoSave = true)
         {
-                var result = new OperationResult();
+            var result = new OperationResult();
 
             var validations = ValidateInsert(entity);
 
@@ -288,7 +323,7 @@ namespace ChartAccountBusiness
 
         public List<ChartAccount> GetAll()
         {
-            
+
             var all = _repository.GetAll()
                 .OrderBy(x => x.Code).OrderBy(x => x.LevelCode)
                 .ToList();
