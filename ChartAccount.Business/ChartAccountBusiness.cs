@@ -178,67 +178,53 @@ namespace ChartAccountBusiness
         public string GetNextCode(string parentCode)
         {
             string newCode = string.Empty;
-
             var chartAccount = _repository.Get(x => x.Code == parentCode, null, "Children").FirstOrDefault();
+            var lastCode = chartAccount.Children.OrderByDescending(x => x.LevelCode).FirstOrDefault();
 
-            if (chartAccount != null && chartAccount.Children.Count() > 0)
+
+            lastCode.LevelCode++;
+
+
+            if (lastCode.LevelCode > 999)
             {
-                var lastCode = chartAccount.Children.OrderByDescending(x => x.LevelCode).FirstOrDefault();
-
-                var currentCode = parentCode + "." + (lastCode.LevelCode);
-                var codeParts = currentCode.Split(".");
-                var level = codeParts.Length-1;
-                var newSingleCode = GetNewSingleCode(currentCode, level);
-
-
-                var changedLevel = newSingleCode.Item1;
-                var newCodeValue = newSingleCode.Item2;
-
-                for (int i = 0; i <= changedLevel; i++)
+                //Como o level atual é 999, sobe um nível para procurar o próximo pai disponível
+                var codeParts = parentCode.Split(".");
+                parentCode = string.Empty;
+                for (int i = 0; i < codeParts.Length - 1; i++)
                 {
-                    if (i == changedLevel)
-                        newCode += newCodeValue.ToString();
-                    else
-                        newCode += codeParts[i] + ".";
+                    parentCode = codeParts[i] + ".";
                 }
-                
-               var chartAccounts = _repository.Get(x => x.Code == newCode);
 
-                if (chartAccounts.Count() > 0)
-                    newCode = GetNextCode(newCode);
 
-                return newCode;
+                //First level, find the last of this level and increment by one, if 999 is achived, throw exception
+                if (parentCode.Length == 0)
+                {
+                    var lastFirstLevel = _repository.Get(x => x.ParentAccountId == null).Max(c => c.LevelCode);
+                    lastFirstLevel++;
+
+                    if (lastFirstLevel > 999)
+                        throw new Exception("Limit of chart accounts achieved");
+
+                    newCode = lastFirstLevel.ToString();
+                }
+                else
+                {
+                    parentCode = parentCode.Substring(0, parentCode.Length - 1);
+                    newCode = GetNextCode(parentCode);
+                }
             }
             else
-                return parentCode + ".1";
+            {
+                var numberParentCode = lastCode.LevelCode;
 
+                newCode = parentCode + "." + numberParentCode.ToString();
 
+                var chartAccounts = _repository.Get(x => x.Code == newCode);
 
+            }
 
-            //if (parentCode.Length == 1)
-            //    parentCode += ".0";
+            return newCode;
 
-            //var codeParts = parentCode.Split(".");
-            //var level = codeParts.Length - 1;
-            //var newSingleCode = GetNewSingleCode(parentCode, level);
-
-            //var changedLevel = newSingleCode.Item1;
-            //var newCodeValue = newSingleCode.Item2;
-
-            //for (int i = 0; i <= changedLevel; i++)
-            //{
-            //    if (i == changedLevel)
-            //        newCode += newCodeValue.ToString();
-            //    else
-            //        newCode += codeParts[i] + ".";
-            //}
-
-            //var chartAccount = _repository.Get(x => x.Code == newCode);
-
-            //if (chartAccount.Count() > 0)
-            //    newCode = GetNextCode(newCode);
-
-            //return newCode;
         }
 
 
@@ -246,29 +232,31 @@ namespace ChartAccountBusiness
         {
             var newCodeToReturn = new Tuple<int, int>(0, 0);
 
-
             var codeParts = parentCode.Split('.');
 
 
             var currentCode = Convert.ToInt32(codeParts[level]);
 
-            if (currentCode == 999 && level > 0)
+
+            if (currentCode == 999)
             {
-                newCodeToReturn = GetNewSingleCode(parentCode, --level);
-            }
-            else if (level > 0)
-            {
-                currentCode++;
-                newCodeToReturn = new Tuple<int, int>(level, currentCode++);
+                if (level > 0)
+                    level--;
+
+                newCodeToReturn = GetNewSingleCode(parentCode, level);
             }
             else
-                throw new Exception("Code limit exceded, try a new main parent");
+            {
+                currentCode++;
+                newCodeToReturn = new Tuple<int, int>(level, currentCode);
+            }
+
 
             return newCodeToReturn;
         }
 
 
-            
+
 
 
         public ChartAccount GetById(int id)
