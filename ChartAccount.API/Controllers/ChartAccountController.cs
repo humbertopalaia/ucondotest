@@ -34,13 +34,11 @@ namespace ChartAccountAPI.Controllers
 
         [HttpGet("List")]
         [AllowAnonymous]
-        public IActionResult List(string name)
+        public IActionResult List()
         {
-
-            var entity = _chartAccountBusiness.Filter(name);
+            var entity = _chartAccountBusiness.GetAll();
 
             var model = _mapper.Map<List<ChartAccountDomain.ChartAccount>, List<ChartAccountListModel>>(entity);
-
 
             return Json(model);
         }

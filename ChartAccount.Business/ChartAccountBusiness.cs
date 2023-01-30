@@ -229,7 +229,6 @@ namespace ChartAccountBusiness
             else
                 throw new Exception("Code limit exceded, try a new main parent");
 
-
             return newCodeToReturn;
         }
 
@@ -289,37 +288,12 @@ namespace ChartAccountBusiness
 
         public List<ChartAccount> GetAll()
         {
-            var all = _repository.GetAll().ToList();
-
-
-            return all;
-        }
-
-        public List<ChartAccount> Filter(string filter)
-        {
-            var all = GetAll();
-
-            if (!filter.IsNullOrEmpty())
-                all = ApplyFilter(all, filter);
             
+            var all = _repository.GetAll()
+                .OrderBy(x => x.Code).OrderBy(x => x.LevelCode)
+                .ToList();
+
             return all.Where(x => x.ParentAccountId == null).ToList();
-        }
-
-        private List<ChartAccount> ApplyFilter(List<ChartAccount> entities, string filter)
-        {
-            List<ChartAccount> filtered = new List<ChartAccount>();
-
-
-            foreach (var entity in entities)
-            {                
-                if(entity.Children != null)
-                    entity.Children = ApplyFilter(entity.Children.ToList(), filter);
-            }
-
-            filtered = entities.Where(x.Name.Contains(filter)).ToList();
-
-              
-            return filtered;
         }
     }
 }

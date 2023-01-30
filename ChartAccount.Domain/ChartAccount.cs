@@ -15,6 +15,7 @@ namespace ChartAccountDomain
         public int Id { get; set; }
         public int? ParentAccountId { get; set; }
         public string Code { get; set; }
+        public int LevelCode { get; set; }
         public string Name { get; set; }
         public string Type { get; set; }
         public bool AcceptEntry { get; set; }
