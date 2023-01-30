@@ -83,10 +83,18 @@ namespace ChartAccountBusiness
 
         private List<string> ValidateAccountTypes(ChartAccount account)
         {
+            var mainParentCode = account.Code.Split('.').First();
+            var parentType = _repository.Get(x => x.Code == mainParentCode).FirstOrDefault().Type;
+
             List<string> errors = new List<string>();
+            
+            List<ChartAccount> accountsDiferentType = new List<ChartAccount>();
 
-            var accountsDiferentType = account.Children.Where(x => x.Type != account.Type).ToList();
+            if (account.Type != parentType)
+                accountsDiferentType.Add(account);
 
+            accountsDiferentType.AddRange(account.Children.Where(x => x.Type != parentType).ToList());
+            
             if (accountsDiferentType.Count > 0)
             {
                 foreach (var childAccount in accountsDiferentType)
@@ -196,7 +204,7 @@ namespace ChartAccountBusiness
                 parentCode = string.Empty;
                 for (int i = 0; i < codeParts.Length - 1; i++)
                 {
-                    parentCode = codeParts[i] + ".";
+                    parentCode += codeParts[i] + ".";
                 }
 
 
